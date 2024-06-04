@@ -2,7 +2,7 @@ const Router = require("express").Router();
 const { body, validationResult } = require("express-validator");
 const Record = require("../modules/record")
 
-Router.post("/leaderboard/",
+Router.post("/leaderboard/:levelId",
   body("name")
     .trim()
     .isLength({ min: 1 })
@@ -16,6 +16,10 @@ Router.post("/leaderboard/",
 
   async (req, res, next) => {
     try {
+      if (+req.params.levelId > 1) {
+        return res.status(404).json({ errors: [{ msg: "Level Not Found." }] });
+      }
+
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -25,6 +29,7 @@ Router.post("/leaderboard/",
 
       const newRecord = new Record({
         name,
+        level: +req.params.levelId,
         record,
       });
 
@@ -40,6 +45,21 @@ Router.post("/leaderboard/",
 Router.get("/leaderboard", async (req, res, next) => {
   try {
     const records = await Record.find().exec();
+    return res.status(200).json(records);
+  } catch (err) {
+    next(err)
+  }
+})
+
+
+Router.get("/leaderboard/:levelId", async (req, res, next) => {
+  try {
+    if (+req.params.levelId > 1) {
+      return res.status(404).json({ errors: [{ msg: "Level Not Found." }] });
+    }
+
+    const records = await Record.find({ level: +req.params.levelId }).exec();
+
     return res.status(200).json(records);
   } catch (err) {
     next(err)
