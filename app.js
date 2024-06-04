@@ -20,8 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const levelRouter = require("./routes/level");
-
+const leaderboardRouter = require("./routes/leaderboard");
 app.use("/api/", levelRouter);
+app.use("/api/", leaderboardRouter);
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;

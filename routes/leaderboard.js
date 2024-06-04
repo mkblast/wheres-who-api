@@ -65,3 +65,5 @@ Router.get("/leaderboard/:levelId", async (req, res, next) => {
     next(err)
   }
 })
+
+module.exports = Router;
