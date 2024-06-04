@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 
 const SQUAR_SIZE = 150;
 
-Router.get("/levels/:levelId/",
+Router.post("/levels/:levelId/",
   body("character")
     .isInt({ min: 0, max: 2 })
     .withMessage("character must be a valid Number and not exceed 2."),
