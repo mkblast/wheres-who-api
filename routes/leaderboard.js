@@ -1,6 +1,6 @@
 const Router = require("express").Router();
 const { body, validationResult } = require("express-validator");
-const Record = require("../modules/record")
+const Record = require("../modules/record");
 
 Router.post("/leaderboard/:levelId",
   body("name")
@@ -35,7 +35,7 @@ Router.post("/leaderboard/:levelId",
 
       await newRecord.save();
 
-      return res.status(200).json({ msg: "Record submited successfully.", newRecord});
+      return res.status(200).json({ msg: "Record submited successfully.", newRecord });
     } catch (err) {
       next(err);
     }
@@ -44,13 +44,12 @@ Router.post("/leaderboard/:levelId",
 
 Router.get("/leaderboard", async (req, res, next) => {
   try {
-    const records = await Record.find().exec();
+    const records = await Record.find().sort({ record: 1 }).exec();
     return res.status(200).json(records);
   } catch (err) {
     next(err)
   }
 })
-
 
 Router.get("/leaderboard/:levelId", async (req, res, next) => {
   try {
@@ -58,7 +57,7 @@ Router.get("/leaderboard/:levelId", async (req, res, next) => {
       return res.status(404).json({ errors: [{ msg: "Level Not Found." }] });
     }
 
-    const records = await Record.find({ level: +req.params.levelId }).exec();
+    const records = await Record.find({ level: +req.params.levelId }).sort({ record: 1 }).exec();
 
     return res.status(200).json(records);
   } catch (err) {
